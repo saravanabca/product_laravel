@@ -19,7 +19,7 @@ $title = 'Products';
             Product Add</button>
     </div>
 
-    <table class="table">
+    <table class="table" id="datatable">
         <thead>
             <tr>
                 <th>Product Name</th>
@@ -73,7 +73,7 @@ $title = 'Products';
 
                                 <div class="col col-md-12 mt-4">
                                     <div class="form-floating text-center w-100">
-                                        <input type="text" class="form-control" id="productPrice"
+                                        <input type="number" class="form-control" id="productPrice"
                                             placeholder="product Description" name="price">
                                         <label for="productPrice">Product Price</label>
                                         <div class="error-message" id="productPrice_error"></div>
@@ -86,14 +86,14 @@ $title = 'Products';
                                     <input type="file" class="form-control" id="productImage"
                                         placeholder="product Image" name="image">
                                     <div class="error-message" id="productImage_error"></div>
-
+                                    <img src="" id="previewImage" alt="">
                                 </div>
 
                             </div>
 
                             <div class="d-flex mt-4">
                                 <div class="ms-auto">
-                                    <button type="button" class="cancel_btn" data-bs-dismiss="modal"
+                                    <button type="button" class="cancel_btn " data-bs-dismiss="modal"
                                         aria-label="Close">Cancel</button>
                                     <button type="submit" class="save_product_details">Save</button>
                                 </div>

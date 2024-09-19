@@ -2,11 +2,11 @@ $(document).ready(function () {
     var mode, id, coreJSON;
     var currentPage = 0; 
     // ***************************[Get] ********************************************************************
-    Getproduct();
+    // Getproduct();
 
-    function Getproduct(){
+
         $.ajax({
-            url: baseUrl + "/product_get",
+            url: baseUrl + "/product-get",
             type: "GET",
             dataType: "json",
             success: function (response) {
@@ -18,15 +18,11 @@ $(document).ready(function () {
                 console.error("Error fetching invoice details:", error);
             },
         });
-    }
+    
 
     function disproduct(data) {
         var i = 0;
 
-        var view_icon = baseUrl + "/user/images/buttons_icon/view_icon.png";
-        var invoice_icon = baseUrl + "/user/images/buttons_icon/add_icon1.png";
-        var edit_icon = baseUrl + "/user/images/buttons_icon/edit.png";
-        var delete_icon = baseUrl + "/user/images/buttons_icon/delete.png";
 
         var table =   $("#datatable").dataTable({
             aaSorting: [],
@@ -34,49 +30,49 @@ $(document).ready(function () {
             aoColumns: [
                 {
                     mData: function (data, type, full, meta) {
-                        if (data.product_name.length > 10) {
-                            return '<span data-toggle="tooltip" title="' + data.product_name + '">' + data.product_name.substring(0, 10) + '...</span>';
-                        } else {
-                            return data.product_name;
-                        }
+                        // if (data.name.length > 10) {
+                        //     return '<span data-toggle="tooltip" title="' + data.name + '">' + data.name.substring(0, 10) + '...</span>';
+                        // } else {
+                        //     return data.name;
+                        // }
+                        return data.name;
+
                     },
                 },
                 {
                     mData: function (data, type, full, meta) {
-                        return data.product_mobile;
+                        return data.description;
                     },
                 },
 
                 {
                     mData: function (data, type, full, meta) {
-                        return data.product_email;
+                        return data.price;
                     },
                 },
 
                 {
                     mData: function (data, type, full, meta) {
-                        return `${data.invoices_count} <button class="view-btn ms-2"  id="${data.id}"><img class="view_icon" src="${view_icon}" alt="">View</button>`;
+                        return `<img class="view_image" src="${baseUrl}/${data.image}" alt="">`;
                     },
                 },
 
                 {
                     mData: function (data, type, full, meta) {
                         // console.log(data.id);
-                        return `<a  href="${baseUrl}/invoice_add/${data.id}" ><button class="invoice-btn" id="${data.id}"><img class="invoice_add_icon" src="${invoice_icon}" alt="">Invoice</button> </a>
-                        <button class="edit-btn" id="${meta.row}"><img class="edit_icon" src="${edit_icon}" alt="">Edit</button>
-                        <button class="delete-btn" id="${data.id}"><img class="delete_icon" src="${delete_icon}" alt="">Delete</button>
+                        return `<button class="edit-btn" id="${meta.row}">Edit</button>
+                        <button class="delete-btn" id="${data.id}">Delete</button>
                         `;
                     },
                 },
             ],
-            drawCallback: function () {
-                $('[data-toggle="tooltip"]').tooltip();
-            }
+            // drawCallback: function () {
+            //     $('[data-toggle="tooltip"]').tooltip();
+            // }
         });
 
     
-        $('[data-toggle="tooltip"]').tooltip();
-        // table.page(currentPage).draw(false);
+        // $('[data-toggle="tooltip"]').tooltip();
 
     }
 
@@ -101,9 +97,29 @@ $(document).ready(function () {
         $(this).find("form").trigger("reset");
         $(".form-control").removeClass("danger-border success-border");
         $(".error-message").html("");
+        $("#previewImage").attr("src", "");
+
     });
 
-    // Real-time validation on keyup
+    $('#productImage').on('change', function(event) {
+        var file = event.target.files[0];
+        
+        if (file) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                $('#previewImage').attr('src', e.target.result);
+                $('#previewImage').show(); 
+                $('#productImage_error').text(''); 
+            };
+            
+            reader.readAsDataURL(file);
+        } else {
+            $('#previewImage').hide();
+            $('#productImage_error').text('No file selected.');
+        }
+    });
+
     $("#product_add_form input").on("keyup", function () {
         validateField($(this));
     });
@@ -121,13 +137,18 @@ $(document).ready(function () {
         if (!validateField($("#productName"))) {
             isValid = false;
             firstInvalidField = $("#productName");
-        } else if (!validateField($("#email"))) {
+        } else if (!validateField($("#productDescription"))) {
             isValid = false;
-            if (firstInvalidField === null) firstInvalidField = $("#email");
-        } else if (!validateField($("#mobile_number"))) {
+            if (firstInvalidField === null) firstInvalidField = $("#productDescription");
+        } else if (!validateField($("#productPrice"))) {
             isValid = false;
             if (firstInvalidField === null)
-                firstInvalidField = $("#mobile_number");
+                firstInvalidField = $("#productPrice");
+        }
+        else if (!validateField($("#productImage"))) {
+            isValid = false;
+            if (firstInvalidField === null)
+                firstInvalidField = $("#productImage");
         }
 
         if (isValid) {
@@ -136,13 +157,12 @@ $(document).ready(function () {
             if (mode == "new") {
                 // showToast("add");
                 // return;
-                AjaxSubmit(formData, baseUrl + "/product_add", "POST");
+                AjaxSubmit(formData, baseUrl + "/product-add", "POST");
 
             } else if (mode == "update") {
-                // showToast(id);
-                // return;
+              
                 formData.append("product_id", id);
-                AjaxSubmit(formData, baseUrl + "/product_update", "POST");
+                AjaxSubmit(formData, baseUrl + "/product-update", "POST");
             }
         } else {
             firstInvalidField.focus();
@@ -160,27 +180,27 @@ $(document).ready(function () {
         if (fieldId === "productName") {
             if (fieldValue === "") {
                 isValid = false;
-                errorMessage = "product Name is required";
+                errorMessage = "Product Name is required";
             }
-        } else if (fieldId === "email") {
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        } 
+       else if (fieldId === "productDescription") {
             if (fieldValue === "") {
                 isValid = false;
-                errorMessage = "Email is required";
-            } else if (!emailRegex.test(fieldValue)) {
-                isValid = false;
-                errorMessage = "Enter a valid Email";
+                errorMessage = "Product Description is required";
             }
-        } else if (fieldId === "mobile_number") {
-            var mobileRegex = /^[0-9]{10}$/;
+        } 
+        else if (fieldId === "productPrice") {
             if (fieldValue === "") {
                 isValid = false;
-                errorMessage = "Mobile Number is required";
-            } else if (!mobileRegex.test(fieldValue)) {
-                isValid = false;
-                errorMessage = "Enter a valid Mobile Number";
+                errorMessage = "Product Price is required";
             }
-        }
+        } 
+       else if (fieldId === "productImage" && mode != 'update') {
+            if (fieldValue === "") {
+                isValid = false;
+                errorMessage = "Product Image is required";
+            }
+        } 
 
         if (isValid) {
             field.removeClass("danger-border").addClass("success-border");
@@ -193,7 +213,7 @@ $(document).ready(function () {
 
         return isValid;
     }
-    // var table = $('#datatable').DataTable(); // Initialize your DataTable
+
 
     // AJAX submit function
     function AjaxSubmit(formData, url, method) {
@@ -214,13 +234,10 @@ $(document).ready(function () {
                         
                         $("#add_product").modal("hide");
 
-                        // Getproduct();
                         showToast(response.message);
-
-                        refreshDetails();
-                        // showToast(response.message); 
-                        // location.reload();
-                        // disInvoice(coreJSON);
+                        window.location.reload();
+                        // Getproduct();
+                     
                     } else {
                         showToast(response.message);
                     }
@@ -229,11 +246,10 @@ $(document).ready(function () {
                     if (response.status_value) {
                         $("#add_product").modal("hide");
                         showToast(response.message);
-                        refreshDetails();
-
+                        // refreshDetails();
                         // Getproduct();
+                        window.location.reload();
 
-                        // showToast(response.message);
                     } else {
                         showToast(response.message);
                     }
@@ -241,7 +257,16 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
                 console.error("Error submitting form:", error);
-                // Handle error
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    $.each(errors, function (key, message) {
+                        alert(message); 
+                    });
+                } else if (xhr.status === 500) { 
+                    alert("An internal server error occurred. Please try again later.");
+                } else {
+                    alert("An error occurred: " + xhr.status + " - " + error);
+                }
             },
         });
     }
@@ -250,26 +275,14 @@ $(document).ready(function () {
 
     $(document).on("click", ".edit-btn", function () {
         var r_index = $(this).attr("id");
-        console.log(coreJSON);
         mode = "update";
         $("#add_product").modal("show");
         
-        $("#productName").val(coreJSON[r_index].product_name);
-        $("#email").val(coreJSON[r_index].product_email);
-        $("#mobile_number").val(coreJSON[r_index].product_mobile);
-        $("#product_address").val(coreJSON[r_index].product_address);
-        $("#product_pin_code").val(coreJSON[r_index].product_pin_code);
-        $("#City").val(coreJSON[r_index].product_city);
-        $("#State").val(coreJSON[r_index].product_state);
-        $("#Country").val(coreJSON[r_index].product_country);
-        $("#product_gstin_number").val(coreJSON[r_index].product_gstin_number);
-        $("#cus_shipping_address").val(coreJSON[r_index].cus_shipping_address);
-        $("#cus_shipping_pin_code").val(
-            coreJSON[r_index].cus_shipping_pin_code
-        );
-        $("#cus_shipping_city").val(coreJSON[r_index].cus_shipping_city);
-        $("#cus_shipping_state").val(coreJSON[r_index].cus_shipping_state);
-        $("#cus_shipping_country").val(coreJSON[r_index].cus_shipping_country);
+        $("#productName").val(coreJSON[r_index].name);
+        $("#productDescription").val(coreJSON[r_index].description);
+        $("#productPrice").val(coreJSON[r_index].price);
+        $("#previewImage").attr("src", baseUrl + '/' + coreJSON[r_index].image);
+
         console.log(coreJSON);
         id = coreJSON[r_index].id;
     });
@@ -289,7 +302,7 @@ $(document).ready(function () {
                     text: "delete product",
                     action: function () {
                         $.ajax({
-                            url: baseUrl + "/product_delete",
+                            url: baseUrl + "/product-delete",
                             method: "POST",
                             headers: {
                                 "X-CSRF-TOKEN": $(
@@ -300,10 +313,9 @@ $(document).ready(function () {
                             success: function (data) {
                                 if (data.status) {
                                    showToast(data.message);
-                                   refreshDetails();
+                                   location.reload();
                                 } else {
                                     showToast(data.message);
-                                    refreshDetails();
                                 }
                             },
                             error: function (xhr, status, error) {
