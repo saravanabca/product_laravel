@@ -15,66 +15,59 @@ $(document).ready(function () {
                 console.log(coreJSON);
             },
             error: function (xhr, status, error) {
-                console.error("Error fetching invoice details:", error);
+                console.error("Error fetching Product details:", error);
             },
         });
     
 
-    function disproduct(data) {
-        var i = 0;
-
-
-        var table =   $("#datatable").dataTable({
-            aaSorting: [],
-            aaData: data.productdetails,
-            aoColumns: [
-                {
-                    mData: function (data, type, full, meta) {
-                        // if (data.name.length > 10) {
-                        //     return '<span data-toggle="tooltip" title="' + data.name + '">' + data.name.substring(0, 10) + '...</span>';
-                        // } else {
-                        //     return data.name;
-                        // }
-                        return data.name;
-
+        function disproduct(data) {
+            if ($.fn.DataTable.isDataTable("#datatable")) {
+                $('#datatable').DataTable().clear().destroy();
+            }
+        
+            var table = $("#datatable").dataTable({
+                aaSorting: [],
+                aaData: data.productdetails,
+                aoColumns: [
+                    {
+                        mData: function (data, type, full, meta) {
+                            return data.name;
+                        },
                     },
-                },
-                {
-                    mData: function (data, type, full, meta) {
-                        return data.description;
+                    {
+                        mData: function (data, type, full, meta) {
+                            if (data.description.length > 15) {
+                                return '<span data-toggle="tooltip" title="' + data.description + '">' + data.description.substring(0, 15) + '...</span>';
+                            } else {
+                                return data.description;
+                            }
+                        },
                     },
-                },
-
-                {
-                    mData: function (data, type, full, meta) {
-                        return data.price;
+                    {
+                        mData: function (data, type, full, meta) {
+                            return data.price;
+                        },
                     },
-                },
-
-                {
-                    mData: function (data, type, full, meta) {
-                        return `<img class="view_image" src="${baseUrl}/${data.image}" alt="">`;
+                    {
+                        mData: function (data, type, full, meta) {
+                            return `<img class="view_image" src="${baseUrl}/${data.image}" alt="Product Image" style="width: 50px; height: 50px;">`;
+                        },
                     },
-                },
-
-                {
-                    mData: function (data, type, full, meta) {
-                        // console.log(data.id);
-                        return `<button class="edit-btn" id="${meta.row}">Edit</button>
-                        <button class="delete-btn" id="${data.id}">Delete</button>
-                        `;
+                    {
+                        mData: function (data, type, full, meta) {
+                            return `<button class="edit-btn btn btn-primary" id="${meta.row}">Edit</button>
+                                    <button class="delete-btn btn btn-danger" id="${data.id}">Delete</button>`;
+                        },
                     },
-                },
-            ],
-            // drawCallback: function () {
-            //     $('[data-toggle="tooltip"]').tooltip();
-            // }
-        });
-
-    
-        // $('[data-toggle="tooltip"]').tooltip();
-
-    }
+                ],
+                drawCallback: function () {
+                    $('[data-toggle="tooltip"]').tooltip();
+                }
+            });
+        
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+        
 
     function refreshDetails()
     {

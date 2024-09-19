@@ -18,7 +18,6 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        // Validate that email and password are required
         $request->validate([
             'email' => 'required',
             'password' => 'required',
@@ -38,7 +37,6 @@ class LoginController extends Controller
             // return Redirect::to('product');
         }
        
-        
         else {
             return response()->json([
                 'status' => false,

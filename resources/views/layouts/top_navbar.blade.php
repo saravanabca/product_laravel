@@ -7,7 +7,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
+                <li>
+                    <a class="navbar-brand" href="{{url('/')}}">Logout</a>
 
+                </li>
 
             </ul>
         </div>

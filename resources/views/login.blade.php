@@ -9,10 +9,19 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/common.css') }}">
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+    <style>
+    .login-container {
+        max-width: 500px;
+        margin: auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    </style>
 </head>
 
 <body>
-    <div class="container">
+    <div class="container login-container mt-5">
         <h2>Admin Login</h2>
         <form id="login_form">
             <div class="form-group">

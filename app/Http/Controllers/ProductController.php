@@ -150,38 +150,5 @@ public function product_delete(Request $request)
 
 }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $product = Product::findOrFail($id);
-        $product->name = $request->input('name');
-        $product->description = $request->input('description');
-        $product->price = $request->input('price');
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
-            $product->image = $imageName;
-        }
-
-        $product->save();
-
-        return redirect()->route('products.index')->with('success', 'Product updated successfully');
-    }
-
-
-    public function destroy(Product $product)
-    {
-        $product->delete();
-        return redirect()->route('products.index');
-    }
-
+   
 }

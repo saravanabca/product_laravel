@@ -56,7 +56,6 @@ return [
     */
 
     'url' => env('APP_URL'),
-    // 'url' => env('APP_URL', 'https://invoicegenerator.preggyzone.com'),
 
     'asset_url' => env('ASSET_URL'),
 

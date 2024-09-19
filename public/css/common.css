@@ -236,7 +236,10 @@ body {
 }
 
 .view_image {
-    width: 50%;
+    width: 50% !important;
+}
+.navbar-dark .navbar-brand:hover{
+    color: black !important;
 }
 
 #previewImage {

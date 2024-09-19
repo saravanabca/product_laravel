@@ -15,8 +15,8 @@ $title = 'Products';
     <div class="main_head1 d-flex">
         <p class="page_heading">Product Details</p>
 
-        <button class="create_btn ms-auto add_product_btn">New
-            Product Add</button>
+        <button class="create_btn ms-auto add_product_btn">Add New
+            Product</button>
     </div>
 
     <table class="table" id="datatable">
@@ -61,7 +61,7 @@ $title = 'Products';
                                 <div class="col col-md-12 mt-4">
                                     <div class="form-floating w-100">
 
-                                        <textarea row="10" cols="20" class="w-100 form-control" id="productDescription"
+                                        <textarea row="50" cols="20" class="w-100 form-control" id="productDescription"
                                             name="description" placeholder="Product Description"></textarea>
                                         <label for="productName">Product Description</label>
 
